@@ -1,0 +1,2 @@
+class Practicetest < Test
+end

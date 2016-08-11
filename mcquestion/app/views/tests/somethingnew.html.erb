@@ -1,0 +1,20 @@
+<%=form_for @test,url:{action:"create"} do |f| %>
+	<div>
+		Name of Test:<%=f.text_field :name%>
+	</div>
+	<div>
+		Time: <%=f.time_field :examtime%>
+	</div>
+	<div>
+		Type: <%=f.select(:type,options_for_select(["Practicetest","Competition"]))%>
+	</div>
+	<div>
+		Add questions: <%=select_tag("question[]", options_from_collection_for_select(@questions,'id','name'), multiple: true)%>
+	</div>
+	<div>
+		<%=f.fields_for :questions do |ques|%>
+			<%=render partial: "questions/addquestion", locals:{f:ques}%>
+		<% end %>
+	</div>
+	<%= f.submit "Create"%>
+<% end %>

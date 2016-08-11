@@ -1,0 +1,7 @@
+<%= form_tag(controller: "questions",action:"create", method: "post") do %>
+	<%= render partial: "addquestion"%>
+	<div>
+		<%= select_tag("typesq[]", options_from_collection_for_select(@type,'id','qtype'),multiple: true, size:6)%>
+	</div>
+	<%= submit_tag("Add question") %>
+<% end %>

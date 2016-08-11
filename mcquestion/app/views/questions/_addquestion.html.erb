@@ -1,0 +1,18 @@
+<div>
+	Question name<%=f.text_field :name%>	
+</div>
+<div>
+	Question <%=f.text_area :question%>
+</div>
+<div>
+	Options <%=f.text_field :options, multiple: true%>
+	Options <%=f.text_field :options, multiple: true%>
+</div>
+<div>
+	Question Type<%=select_tag("questionexist[]", options_from_collection_for_select(@questype,'id','qtype'),multiple:true)%>
+</div>
+<div>
+	Add Question type<%=f.fields_for :questiontypes do |qtyp|%>
+		<%=qtyp.text_field :qtype%>
+	<% end %>
+</div>

@@ -1,0 +1,36 @@
+<%= form_tag(controller:"tests",action:"create",method:"post") do%>
+	<div>
+		<div>
+			<%=label_tag("name", "Name of test")%>
+		</div>
+		<div>
+			<%=text_field_tag("name")%>
+		</div>
+	</div>
+	<div>
+		<div>
+			<%=label_tag("time","Time for test")%>
+		</div>
+		<div>
+			<%=time_field_tag("time")%>
+		</div>
+	</div>
+	<div>
+		<div>
+			<%=label_tag("Test type")%>
+		</div>
+		<div>
+			<%=select_tag("testype",options_for_select(["Practicetest","Competition"]))%>
+		</div>
+	</div>
+	<div>
+		<div>
+			<%=label_tag("questions")%>
+		</div>
+		<div>
+			<%= select_tag("questions[]", options_from_collection_for_select(@question,'id','name'),multiple: true, size:6)%>
+		</div>
+	</div>
+	<%= render partial: "questions/addquestion"%>
+	<%= submit_tag("Add question") %>
+<% end %>

@@ -1,0 +1,4 @@
+<%= form_for @ques, url:{action:"create"} do |f|%>
+	<%=render partial: "addquestion", locals:{f:f}%>
+	<%=f.submit "Create"%>
+<% end %>
