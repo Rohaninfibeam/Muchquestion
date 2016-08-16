@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
-  devise_for :users
+  get 'users/sign_in', to:'home#login'
+  devise_for :users, :controllers => { :omniauth_callbacks => "user" }
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
@@ -16,8 +17,12 @@ Rails.application.routes.draw do
   #   resources :products
 
     resources :questions
-    resources :tests
-    get 'auth/google_oauth2/callback', to: 'user#create'
+    resources :tests do
+      member do
+        get 'start_test'
+      end
+    end
+    # get 'auth/google_oauth2/callback', to: 'user#create'
   # Example resource route with options:
   #   resources :products do
   #     member do

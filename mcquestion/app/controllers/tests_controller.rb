@@ -10,6 +10,10 @@ class TestsController < ApplicationController
 	def create
 		Test.create(testparams)
 	end
+	def start_test
+		test_id=params[:id]
+		@test=Test.find(test_id)
+	end
 
 	private
 
