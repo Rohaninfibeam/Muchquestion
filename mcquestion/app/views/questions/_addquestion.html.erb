@@ -30,7 +30,7 @@
 	
 </div>
 <div>
-	Question Type<%=f.collection_select :questiontype_id, Questiontype.all, :id, :qtype %>
+	Question Type<%=f.collection_select :questiontype_ids, Questiontype.all, :id, :qtype,{},{:multiple => true} %>
 </div>
 <div>
 	Add Question type<%=f.fields_for :questiontypes do |qtyp|%>

@@ -12,16 +12,16 @@ class QuestionsController < ApplicationController
 
 	def create
 		que=Question.create(question_params)
-		questype=params[:questionexist]
-		questype.each do |qty|
-			que.questiontypes<<Questiontype.find(qty.to_i)
-		end
+		# questype=params[:questionexist]
+		# questype.each do |qty|
+		# 	que.questiontypes<<Questiontype.find(qty.to_i)
+		# end
 	end
 
 	private
 
     def question_params
-   	 params.require(:question).permit(:name, :question,questiontypes_attributes:[:qtype],options_attributes:[:value,:istrue])
+   	 params.require(:question).permit(:name, :question,questiontype_ids:[],questiontypes_attributes:[:qtype],options_attributes:[:value,:istrue])
   	end
 
 end
