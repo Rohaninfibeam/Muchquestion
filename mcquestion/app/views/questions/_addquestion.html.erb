@@ -1,15 +1,36 @@
 <div>
-	Question name<%=f.text_field :name%>	
+	Question name<%=f.text_field :name%>
 </div>
 <div>
 	Question <%=f.text_area :question%>
 </div>
 <div>
-	Options <%=f.text_field :options, multiple: true%>
-	Options <%=f.text_field :options, multiple: true%>
+	options <%=f.fields_for :options do |opti|%>
+		<%=opti.check_box :istrue%>
+		<%=opti.text_field :value%>
+	<% end %>
+	<div>
+		<%=f.fields_for :options do |opti|%>
+			<%=opti.check_box :istrue%>
+			<%=opti.text_field :value%>
+		<% end %>
+	</div>
+	<div>
+		<%=f.fields_for :options do |opti|%>
+			<%=opti.check_box :istrue%>
+			<%=opti.text_field :value%>
+		<% end %>
+	</div>
+	<div>
+		<%=f.fields_for :options do |opti|%>
+			<%=opti.check_box :istrue%>
+			<%=opti.text_field :value%>
+		<% end %>
+	</div>
+	
 </div>
 <div>
-	Question Type<%=select_tag("questionexist[]", options_from_collection_for_select(@questype,'id','qtype'),multiple:true)%>
+	Question Type<%=f.collection_select :questiontype_id, Questiontype.all, :id, :qtype %>
 </div>
 <div>
 	Add Question type<%=f.fields_for :questiontypes do |qtyp|%>

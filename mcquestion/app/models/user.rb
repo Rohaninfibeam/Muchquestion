@@ -4,6 +4,8 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers => [:google_oauth2]
   serialize :role ,Array
+  has_many :testusers 
+  has_many :tests, through: :testusers
   def self.from_google(auth_token)
   	data = auth_token.info
   	user = User.where(:email => data["email"]).first

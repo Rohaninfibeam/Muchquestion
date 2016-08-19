@@ -1,7 +1,29 @@
 <html>
   <div class="row">
     <div class="col-md-8">
-      <button type="button" class="btn btn-primary">Primary</button>
+      <%= form_for @testuser, url: {controller:"testusers",action: "createuseranswer"}, method: "post"  do |f|%>
+        <%=f.hidden_field :user_id%>
+        <%=f.hidden_field :test_id%>
+        <% @test.questions.each do |ques|%>
+           <div>
+             <%= ques.question %>
+           </div>
+           <div>
+            <%=f.fields_for :userquestions do |userque|%>
+             <%=userque.hidden_field :question_id, :value => ques.id%>
+             <% ques.options.each do |opt|%>
+                 <div class="container">
+                    <%=userque.fields_for :answerusers do |ansuser|%>
+                      <%=ansuser.check_box :option_id, {}, opt.id%>
+                    <% end %>
+                    <%= opt.value %>
+                 </div>
+             <% end %>
+            <% end %>
+           </div>
+        <% end %>
+        <%=f.submit "Create"%>
+      <% end %>
     </div>
     <div class="col-md-4">
     </div>

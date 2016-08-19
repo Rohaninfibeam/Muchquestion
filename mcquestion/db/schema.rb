@@ -11,14 +11,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160816065530) do
+ActiveRecord::Schema.define(version: 20160818101849) do
+
+  create_table "answerusers", force: :cascade do |t|
+    t.integer  "userquestion_id", limit: 4
+    t.integer  "option_id",       limit: 4
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+  end
+
+  create_table "options", force: :cascade do |t|
+    t.integer  "question_id", limit: 4
+    t.string   "value",       limit: 255
+    t.boolean  "istrue",      limit: 1
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
 
   create_table "questions", force: :cascade do |t|
+    t.text     "name",       limit: 65535
     t.text     "question",   limit: 65535
-    t.text     "options",    limit: 65535
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
-    t.string   "name",       limit: 255
   end
 
   create_table "questiontypeassocs", force: :cascade do |t|
@@ -47,6 +61,20 @@ ActiveRecord::Schema.define(version: 20160816065530) do
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
     t.string   "type",       limit: 255
+  end
+
+  create_table "testusers", force: :cascade do |t|
+    t.integer  "test_id",    limit: 4
+    t.integer  "user_id",    limit: 4
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+  end
+
+  create_table "userquestions", force: :cascade do |t|
+    t.integer  "testuser_id", limit: 4
+    t.integer  "question_id", limit: 4
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
   end
 
   create_table "users", force: :cascade do |t|

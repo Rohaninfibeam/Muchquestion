@@ -22,6 +22,8 @@ Rails.application.routes.draw do
         get 'start_test'
       end
     end
+
+    resources :testusers
     # get 'auth/google_oauth2/callback', to: 'user#create'
   # Example resource route with options:
   #   resources :products do
