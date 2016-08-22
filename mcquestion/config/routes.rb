@@ -23,7 +23,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :testusers
+    put 'tests/:id/start_test', to: 'testusers#createuseranswer'
     # get 'auth/google_oauth2/callback', to: 'user#create'
   # Example resource route with options:
   #   resources :products do

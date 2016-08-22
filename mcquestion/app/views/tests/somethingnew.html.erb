@@ -9,7 +9,7 @@
 		Type: <%=f.select(:type,options_for_select(["Practicetest","Competition"]))%>
 	</div>
 	<div>
-		Add questions: <%=select_tag("question[]", options_from_collection_for_select(@questions,'id','name'), multiple: true)%>
+		Add questions: <%=f.select :question_ids, options_from_collection_for_select(@questions,'id','name'), {},multiple: true%>
 	</div>
 	<div>
 		<%=f.fields_for :questions do |ques|%>
