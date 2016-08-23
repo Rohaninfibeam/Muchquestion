@@ -16,4 +16,42 @@ class User < ActiveRecord::Base
   		return user
   	end
   end
+
+  def findscore(test)
+    @testuser=Testuser.where(:test_id=>test.id,:user_id=>self.id)
+    ha={}
+    @test.questions.each do |que|
+      ar=[]
+      que.options.where(:istrue=>true).each do |opt|
+        ar<<opt.id
+      end
+      ha[que.id]=ar
+    end
+    xx=@testuser.map do |tesus|
+      quess={}
+      tesus.userquestions.each do |usqu|
+        ar=[]
+        usqu.answerusers.where.not(:option_id=>0).each do |ansuse|
+          ar<<ansuse.option_id
+        end
+        quess[usqu.question_id]=ar
+      end
+      quess
+    end
+    ans=[]
+    xx.each do |x|
+      cnt=0
+      ha.each do |k,v|
+        if x.key?(k) 
+          v.each do |val|
+            if x[k].include? val
+              cnt=cnt+1
+            end
+          end
+        end
+      end
+      ans<<cnt
+    end
+  end
+
 end

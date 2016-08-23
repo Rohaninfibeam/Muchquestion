@@ -1,3 +1,3 @@
 class Competition < Test
-	
+		
 end
