@@ -1,5 +1,5 @@
 class Userquestion < ActiveRecord::Base
-	belongs_to :testuser
+	belongs_to :testuser, ->{where realtestuser_id: nil}
 	has_many :answerusers
 	accepts_nested_attributes_for :answerusers
 	# before_create :checkunique

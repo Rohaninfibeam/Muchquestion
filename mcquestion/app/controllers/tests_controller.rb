@@ -1,4 +1,9 @@
 class TestsController < ApplicationController
+	
+	def index
+		@test=Test.all
+	end
+
 	def new
 		@test=Test.new
 		@ques=@test.questions.new
@@ -15,11 +20,11 @@ class TestsController < ApplicationController
 		test_id=params[:id]
 		@test=Test.find(test_id)
 		user_id=current_user.id
-		@testuser=Testuser.where(user_id:user_id,test_id:@test.id)
-		if((@testuser.exists?)&&(@test.type=="Competition"))
+		@testuser=Testuser.where(user_id:user_id,test_id:@test.id,realtestuser_id:nil).first
+		if((@testuser.usertests.count>0)&&(@test.type=="Competition"))
 			raise "You have already submitted the answer for this test".inspect
 		end
-		@testuser=Testuser.new(:test_id=>test_id,:user_id=>user_id)
+		@testuser=Testuser.new(:test_id=>test_id,:user_id=>user_id,:realtestuser_id=>@testuser.id)
 		@userques=@testuser.userquestions.build
 		@userques.answerusers.build
 	end

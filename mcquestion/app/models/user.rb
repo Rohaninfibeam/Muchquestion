@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers => [:google_oauth2]
   serialize :role ,Array
-  has_many :testusers 
+  has_many :testusers, ->{where realtestuser_id: nil}
   has_many :tests, through: :testusers
   def self.from_google(auth_token)
   	data = auth_token.info
@@ -17,10 +17,14 @@ class User < ActiveRecord::Base
   	end
   end
 
+  def admin?
+    return self.role.include? "admin"
+  end
+
   def findscore(test)
     @testuser=Testuser.where(:test_id=>test.id,:user_id=>self.id)
     ha={}
-    @test.questions.each do |que|
+    test.questions.each do |que|
       ar=[]
       que.options.where(:istrue=>true).each do |opt|
         ar<<opt.id
@@ -42,7 +46,7 @@ class User < ActiveRecord::Base
     xx.each do |x|
       cnt=0
       ha.each do |k,v|
-        if x.key?(k) 
+        if x.key?(k) && (x[k].count<=v.count)
           v.each do |val|
             if x[k].include? val
               cnt=cnt+1
@@ -52,6 +56,7 @@ class User < ActiveRecord::Base
       end
       ans<<cnt
     end
+    return ans
   end
 
 end

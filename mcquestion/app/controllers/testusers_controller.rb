@@ -9,6 +9,6 @@ class TestusersController < ApplicationController
 	private
 
 	def testuserparams
-		params.require(:testuser).permit(:test_id,:user_id,userquestions_attributes:[:question_id,answerusers_attributes:[:option_id]])
+		params.require(:testuser).permit(:test_id,:user_id,:realtestuser_id,userquestions_attributes:[:question_id,answerusers_attributes:[:option_id]])
 	end
 end
