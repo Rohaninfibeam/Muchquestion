@@ -1,6 +1,5 @@
 class QuestionsController < ApplicationController
   
-
 	def index
 
 	end
@@ -13,7 +12,7 @@ class QuestionsController < ApplicationController
 	end
 
 	def create
-		que=Question.create(question_params)
+		@question=Question.create(question_params)
 		# questype=params[:questionexist]
 		# questype.each do |qty|
 		# 	que.questiontypes<<Questiontype.find(qty.to_i)

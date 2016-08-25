@@ -22,7 +22,7 @@ class User < ActiveRecord::Base
   end
 
   def findscore(test)
-    @testuser=Testuser.where(:test_id=>test.id,:user_id=>self.id)
+    @testuser=Testuser.where(:test_id=>test.id,:user_id=>self.id, :realtestuser_id=>nil).first
     ha={}
     test.questions.each do |que|
       ar=[]
@@ -31,6 +31,7 @@ class User < ActiveRecord::Base
       end
       ha[que.id]=ar
     end
+    @testuser=@testuser.usertests
     xx=@testuser.map do |tesus|
       quess={}
       tesus.userquestions.each do |usqu|
