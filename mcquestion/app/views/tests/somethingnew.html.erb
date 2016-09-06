@@ -11,10 +11,13 @@
 	<div>
 		Add questions: <%=f.select :question_ids, options_from_collection_for_select(@questions,'id','name'), {},multiple: true%>
 	</div>
-	<div>
-		<%=f.fields_for :questions do |ques|%>
-			<%=render partial: "questions/addquestion", locals:{f:ques}%>
-		<% end %>
+	<span class="glyphicon glyphicon-plus" id="add-question"></span>
+	<div id="question-type">
+		<div>
+			<%=f.fields_for :questions do |ques|%>
+				<%=render partial: "questions/addquestion", locals:{f:ques}%>
+			<% end %>
+		</div>
 	</div>
 	<%= f.submit "Create"%>
 <% end %>

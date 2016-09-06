@@ -1,5 +1,9 @@
 <%= form_for @ques, url:{action:"create"} do |f|%>
-	<%=render partial: "addquestion", locals:{f:f}%>
-	<%=f.submit "Create"%>
+	<div class="container question-type">
+		<div>
+			<%=render partial: "addquestion", locals:{f:f}%>
+		</div>
+	</div>
+	<%=f.submit "Create", class:"btn btn-default"%>
 	<%= link_to('Logout', destroy_user_session_path, :method => :delete) %>
 <% end %>
