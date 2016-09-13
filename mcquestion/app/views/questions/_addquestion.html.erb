@@ -1,6 +1,7 @@
 <script type="text/javascript">
 	$(document).ready(function(){
-		$("#add-question,#add-option,#add-questiontype").click(function(){
+		$("#add-question,#add-option,#add-questiontype").unbind('click').click(function(){
+		console.log("hey bob");
 		button=this.id.split("-")[1]
 		length=$("#".concat(button,"-type")).children('div').length
 		clonedtype=$(this).parent().find("#".concat(button,"-type")).children().last().clone(true);
@@ -11,7 +12,7 @@
 		});
 	});
 </script>
-
+<br>
 <div class="form-group">
 	<label>Question name</label>
 	<%=f.text_field :name, class: "form-control"%>
@@ -23,19 +24,15 @@
 	
 <span class="glyphicon glyphicon-plus" id="add-option"></span>
 <div id="option-type">
-	<div>
-		options <%=f.fields_for :options do |opti|%>
-			<%=opti.check_box :istrue%>
+	<%=f.fields_for :options do |opti|%>
+		<div>
+			options <%=opti.check_box :istrue%>
 			<%=opti.text_field :value%>
-		<% end %>
-	</div>
-	<div>
-		options	<%=f.fields_for :options do |opti|%>
-			<%=opti.check_box :istrue%>
-			<%=opti.text_field :value%>
-		<% end %>
-	</div>
+			<span class="glyphicon glyphicon-remove-sign"></span>
+		</div>
+	<% end %>
 </div>
+<br>
 
 
 	
@@ -55,14 +52,17 @@
 	
 <!-- </div> -->
 <div>
-	Question Type<%=f.collection_select :questiontype_ids, Questiontype.all, :id, :qtype,{},{:multiple => true} %>
+	Question Type <%=f.collection_select :questiontype_ids, Questiontype.all, :id, :qtype,{},{:multiple => true} %>
 </div>
+<br>
 
 <span class="glyphicon glyphicon-plus" id="add-questiontype"></span>
 <div id="questiontype-type">
-	<div>
-		Add Question type<%=f.fields_for :questiontypes do |qtyp|%>
-			<%=qtyp.text_field :qtype%>
-		<% end %>
-	</div>
+	<%=f.fields_for :questiontypes do |qtyp|%>
+		<div>
+			Add Question type <%=qtyp.text_field :qtype%>
+			<span class="glyphicon glyphicon-remove-sign"></span>
+		</div>
+	<% end %>
 </div>
+<br>

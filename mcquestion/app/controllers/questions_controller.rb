@@ -12,11 +12,10 @@ class QuestionsController < ApplicationController
 	end
 
 	def create
-		@question=Question.create(question_params)
-		# questype=params[:questionexist]
-		# questype.each do |qty|
-		# 	que.questiontypes<<Questiontype.find(qty.to_i)
-		# end
+		@ques=Question.new(question_params)
+		if !@ques.save
+			render 'somethingnew'
+		end
 	end
 
 	private

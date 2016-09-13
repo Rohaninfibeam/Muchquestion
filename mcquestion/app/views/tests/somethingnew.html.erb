@@ -1,23 +1,34 @@
-<%=form_for @test,url:{action:"create"} do |f| %>
-	<div>
-		Name of Test:<%=f.text_field :name%>
-	</div>
-	<div>
-		Time: <%=f.time_field :examtime%>
-	</div>
-	<div>
-		Type: <%=f.select(:type,options_for_select(["Practicetest","Competition"]))%>
-	</div>
-	<div>
-		Add questions: <%=f.select :question_ids, options_from_collection_for_select(@questions,'id','name'), {},multiple: true%>
-	</div>
-	<span class="glyphicon glyphicon-plus" id="add-question"></span>
-	<div id="question-type">
+<%=form_for(@test,as: :test, url:{action:"create"}, :html=>{:class=>"container panel panel-default"}) do |f| %>
+	<div class=" panel-heading">
 		<div>
-			<%=f.fields_for :questions do |ques|%>
-				<%=render partial: "questions/addquestion", locals:{f:ques}%>
+			<% if @test.errors.any?%>
+				<%= @test.errors.full_messages %>
 			<% end %>
 		</div>
+		<div>
+			Name of Test:<%=f.text_field :name%>
+		</div>
+		<div>
+			Time: <%=f.time_field :examtime%>
+		</div>
+		<div>
+			Type: <%=f.select(:type,options_for_select(["Practicetest","Competition"]))%>
+		</div>
+		<div>
+			Add questions: <%=f.select :question_ids, options_from_collection_for_select(Question.all,'id','name'), {},multiple: true%>
+		</div>
 	</div>
-	<%= f.submit "Create"%>
+	<span class="glyphicon glyphicon-plus" id="add-question"></span>
+	<br>
+	<div id="question-type">
+		<%=f.fields_for :questions do |ques|%>
+			<div class="panel panel-body panel-success">
+				<span class="glyphicon glyphicon-remove-sign" style="float:right"></span>
+				<%=render partial: "questions/addquestion", locals:{f:ques}%>
+			</div>
+		<% end %>
+	</div>
+	<div class="panel-footer panel-success">
+		<%= f.submit "Create"%>
+	</div>
 <% end %>

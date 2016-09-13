@@ -1,9 +1,16 @@
-<%= form_for @ques, url:{action:"create"} do |f|%>
-	<div class="container question-type">
-		<div>
+<%= form_for @ques, url:{action:"create"}, :html=>{:class=>"container panel panel-defualt"} do |f|%>
+	<div>
+		<% if @ques.errors.any?%>
+			<%= @ques.errors.full_messages %>
+		<% end %>
+	</div>
+	<div class="question-type">
+		<div class="panel panel-body panel-success">
 			<%=render partial: "addquestion", locals:{f:f}%>
 		</div>
 	</div>
-	<%=f.submit "Create", class:"btn btn-default"%>
+	<div class="panel panel-footer">
+		<%=f.submit "Create", class:"btn btn-default"%>
+	</div>
 	<%= link_to('Logout', destroy_user_session_path, :method => :delete) %>
 <% end %>

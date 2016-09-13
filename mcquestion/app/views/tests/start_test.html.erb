@@ -1,32 +1,97 @@
+<script type="text/javascript">
+    $(document).ready(function(){
+        /* Simple Timer. The countdown to 20:30 2100.05.09
+        --------------------------------------------------------- */
+        // var strtime='<%=@testtime%>'
+        // currtime=new Date();
+        // var [h,m,s]=strtime.split(":").map(Number);
+        // examtime=new Date(currtime.getTime() + h*3600000 + m*60000 +s)
+        // $('#simple_timer').syotimer({
+        //     year: examtime.getFullYear(),
+        //     month: examtime.getMonth()+1,
+        //     day: examtime.getDate(),
+        //     hour: examtime.getHours(),
+        //     minute: examtime.getMinutes(),
+        //     second: examtime.getSeconds()
+        // });
+        /* Timer with Head and Foot. Countdown is over
+        --------------------------------------------------------- */
+        var strtime='<%=@testtime%>'
+        var [h,m,s]=strtime.split(":").map(Number)
+        $("#timvalue").val(h*3600 + m*60 +s);
+        timerHandler = setInterval( "MyTimer()" , 1000);
+    });
+
+    function MyTimer(){
+      valueTimer=$("#timvalue").val();
+      if(valueTimer > 0)
+      {
+        tottime=valueTimer -1;
+        hours = (valueTimer/3600).toString().split('.')[0];
+        mins  = ((valueTimer % 3600) / 60).toString().split('.')[0]; 
+        secs  = ((valueTimer % 3600) % 60).toString(); 
+       
+        if(hours.length == 1) hours = '0' + hours; 
+        if(mins.length  == 1) mins  = '0' + mins; 
+        if(secs.length  == 1) secs  = '0' + secs;
+
+        $('#timer').text( hours + ':' +  mins + ':'  + secs);
+        $('#timvalue').val(tottime);
+      }
+      else
+      {
+        alert("Your time is up");
+        $('#new_testuser').submit();
+      }
+    };
+</script>
+
 <html>
-  <div class="row">
-    <div class="col-md-8">
+  <div class="text-center">
+    <h3><%=@test.name.capitalize%></h3>
+  </div>
+
+  <div class="row container">
+    <div class="col-md-9">
       <%= form_for @testuser, url: {controller:"testusers",action: "createuseranswer"}, method: "put"  do |f|%>
         <%= f.hidden_field :test_id%>
         <%= f.hidden_field :user_id%>
         <%= f.hidden_field :realtestuser_id%>
-        <% @test.questions.each do |ques|%>
-           <div>
-             <%= ques.question %>
-           </div>
-           <div>
-            <%=f.fields_for :userquestions do |userque|%>
-             <%=userque.hidden_field :question_id, :value => ques.id%>
-             <% ques.options.each do |opt|%>
-                 <div class="container">
-                    <%=userque.fields_for :answerusers do |ansuser|%>
-                      <%=ansuser.check_box :option_id, {}, opt.id%>
-                    <% end %>
-                    <%= opt.value %>
-                 </div>
-             <% end %>
-            <% end %>
-           </div>
+        <% @test.questions.each_with_index do |ques,val|%>
+          <div>
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <%=val+1%>. <%= ques.question %>
+              </div>
+              <div class="panel-body">
+               <%=f.fields_for :userquestions do |userque|%>
+                <%=userque.hidden_field :question_id, :value => ques.id%>
+                <% ques.options.each do |opt|%>
+                    <div class="container">
+                       <%=userque.fields_for :answerusers do |ansuser|%>
+                         <%=ansuser.check_box :option_id, {}, opt.id%>
+                       <% end %>
+                       <%= opt.value %>
+                    </div>
+                <% end %>
+               <% end %>
+              </div>
+            </div>
+          </div>
         <% end %>
-        <%=f.submit "Create"%>
+        <div class="text-center">
+          <%=f.submit "Submit"%>
+        </div>
       <% end %>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
+      <!-- <div id="simple_timer" class="syo_timer timer">
+      
+      </div> -->
+      <div>
+        Time Left : <b id="timer"></b>
+        <input type="hidden" id="timvalue">
+      </div>
     </div>
   </div>
 </html>

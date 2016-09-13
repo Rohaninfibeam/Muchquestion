@@ -15,12 +15,16 @@ class TestsController < ApplicationController
 	end
 	
 	def create
-		@test=Test.create(test_params)
+		@test=Test.new(test_params)
+		if !@test.save
+			render "somethingnew"
+		end
 	end
 
 	def start_test
 		test_id=params[:id]
 		@test=Test.find(test_id)
+		@testtime=@test.examtime.strftime("%H:%M:%S")
 		user_id=current_user.id
 		@testuser=Testuser.where(user_id:user_id,test_id:@test.id,realtestuser_id:nil).first
 
