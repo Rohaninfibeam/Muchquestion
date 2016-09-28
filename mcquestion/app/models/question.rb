@@ -7,7 +7,7 @@ class Question < ActiveRecord::Base
 	has_many :tests, through: :testquestions
 	has_many :options
 	validates_associated :options
-	validates :options, length:{minimum:3, maximum:6}
+	validates :options, length:{minimum:0, maximum:6}
 	accepts_nested_attributes_for :questiontypes
 	accepts_nested_attributes_for :options
 	# scope :red, ->{ where(:name=>'asdfg') }

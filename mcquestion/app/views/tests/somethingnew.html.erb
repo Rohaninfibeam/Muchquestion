@@ -18,12 +18,12 @@
 			Add questions: <%=f.select :question_ids, options_from_collection_for_select(Question.all,'id','name'), {},multiple: true%>
 		</div>
 	</div>
-	<span class="glyphicon glyphicon-plus" id="add-question"></span>
+	<span class="add-question glyphicon glyphicon-plus" data-name="question">Add questions</span>
 	<br>
-	<div id="question-type">
+	<div class="question-type question-sortable">
 		<%=f.fields_for :questions do |ques|%>
-			<div class="panel panel-body panel-success">
-				<span class="glyphicon glyphicon-remove-sign" style="float:right"></span>
+			<div class="hiddenquestion panel panel-body panel-success">
+				<span class="remove-question glyphicon glyphicon-remove-sign" data-name="question" style="float:right"></span>
 				<%=render partial: "questions/addquestion", locals:{f:ques}%>
 			</div>
 		<% end %>
