@@ -29,7 +29,33 @@ class TestsController < ApplicationController
 
 	def update
 		@test=Test.find(params[:id])
-		if @test.update_attributes!(test_params)
+		questionorder=1
+		test_params_new = Marshal.load(Marshal.dump(test_params))
+		test_params_new["questions_attributes"].each do |key,val|
+			if(val["_destroy"]=="0")
+				val.merge!("order"=> questionorder)
+				# raise val.inspect
+				questionorder=questionorder+1
+				optionorder=1
+				questiontypeorder=1
+				val["options_attributes"].each do |k,v|
+					if(v["_destroy"]=="0")
+						v.merge!("order"=>optionorder)
+						optionorder=optionorder+1
+					end
+				end
+				val["questiontypes_attributes"].each do |k,v|
+					if(v["_destroy"]=="0")
+						v.merge!("order"=>questiontypeorder)
+						questiontypeorder=questiontypeorder+1
+					end
+				end
+			end
+		end
+
+		# raise test_params_new.inspect
+
+		if @test.update_attributes!(test_params_new)
 			flash[:success]="Test updated successfully"
 		else
 			puts "not updated successfully"
