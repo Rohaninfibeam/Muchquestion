@@ -1,3 +1,75 @@
+<script type="text/javascript">
+	$(document).ready(function(){
+		$(".add-question,.add-option,.add-questiontype").unbind('click').click(init_element);
+		$(".question-sortable,.option-sortable,.questiontype-sortable").sortable();
+		$(".remove-option,.remove-questiontype,.remove-question").unbind('click').click(remove_div);
+
+		function init_element(){
+			button= $(this).data("name");
+			console.log(button);
+			length=$(this).parent().find(".".concat(button,"-type")).children('div').length
+			if(!$(this).parent().find(".".concat(button,"-type")).children('div').is(":visible")){
+				$(this).parent().find(".hidden"+button).show();
+				$(this).parent().find(".".concat(button,"-type")).children('div').first().find(":input").prop('disabled', false)
+			}
+			else{
+				clonedtype=$(this).parent().find(".".concat(button,"-type")).children('div').last().clone();
+				console.log($(this).parent().find(".".concat(button,"-type")));
+				$(this).parent().find(".".concat(button,"-type")).append(clonedtype)
+				$(this).parent().find(".".concat(button,"-type")).children().last().find(":input").each(function(){
+					this.name=this.name.replace(this.name.substr(this.name.indexOf(button)),this.name.substr(this.name.indexOf(button)).replace(/[0-9]+/,length))
+				});
+
+				if(button == "question"){
+					clonedtype.find(".option-type").children(":input").remove()
+					clonedtype.find(".questiontype-type").children(":input").remove()
+					if(clonedtype.find(".destroy-question").length)
+						clonedtype.find(".destroy-question").remove()
+					$('.add-option,.add-questiontype', clonedtype).unbind('click').click(init_element);
+					$('.option-sortable,.questiontype-sortable', clonedtype).sortable();
+					$(".remove-option,.remove-questiontype,.remove-question").unbind('click').click(remove_div);
+				}
+				if(button == "option"){
+					$(".remove-option",clonedtype).unbind('click').click(remove_div);
+				}
+				if(button == "questiontype"){
+					$(".remove-questiontype",clonedtype).unbind('click').click(remove_div);
+				}
+			}
+		}
+
+		function remove_div(){
+			button=$(this).data("name");
+			gp=$(this).parent().parent();
+			console.log(gp);
+			if(gp.children('div').length>1){
+				if($(this).parent().find(".destroy-"+button).length){
+					$(this).parent().find(".destroy-"+button).first().find(':input').last().prop('checked',true)
+					$(this).parent().hide();
+				}
+				else {
+					namestring=$(this).parent().find(":input").first()[0].name
+					index=parseInt(namestring.substring(namestring.indexOf(button)).match(/[0-9]+/)[0])
+					$(this).parent().parent().find(":input").each(function(){
+						ind=parseInt(this.name.substring(this.name.indexOf(button)).match(/[0-9]+/)[0])
+						if(ind>index)
+							this.name=this.name.replace(this.name.substr(this.name.indexOf(button)),this.name.substr(this.name.indexOf(button)).replace(/[0-9]+/,ind-1))
+					});
+					$(this).parent().remove();
+					$(this).parent().find(":input").prop('disabled',true);
+				}
+			}
+			else
+			{
+				if($(this).parent().find(".destroy-"+button).length){
+					$(this).parent().find(".destroy-"+button).first().find(':input').last().prop('checked',true)
+				}
+				$(this).parent().hide();
+				$(this).parent().find(":input").prop('disabled',true);
+			}
+		}
+	});
+</script>
 <%= form_for @test, url:{action:"update"}, :html=>{:class=>"container panel panel-default"} do |f|%>
 	<div class="panel-heading">
 		<div class="form-group">
@@ -12,9 +84,13 @@
 		<div class="question-type question-sortable">
 		Question <% @test.questions.each_with_index do |question,index|%>
 		  <%=f.fields_for :questions,question do |ques|%>
-			<div class="panel panel-body panel-success">
+			<div class="hiddenquestion panel panel-body panel-success">
+				<span class="remove-question glyphicon glyphicon-remove-sign" data-name="question" style="float:right"></span>
+				<div class="destroy-question" style="display: none;">
+					<%=ques.check_box :_destroy%>
+				</div>
 				<div class="form-group">
-					<%=index+1%> <%=ques.text_field :name%>
+					Name <%=ques.text_field :name%>
 				</div>
 				<div class="form-group">
 					Question <%=ques.text_field :question%>
@@ -22,17 +98,25 @@
 				<span class="add-option glyphicon glyphicon-plus" data-name="option"></span>
 				<div class="option-type option-sortable form-group">
 					<%=ques.fields_for :options do |opt|%>
-						<div>
+						<div class="hiddenoption">
+							<div class="destroy-option" style="display: none;">
+								<%=opt.check_box :_destroy%>
+							</div>
 							<%=opt.check_box :istrue%>
 							<%=opt.text_field :value%>
+							<span class="remove-option glyphicon glyphicon-remove-sign" data-name="option"></span>
 						</div>
 					<% end %>
 				</div>
-				<span class="add-option glyphicon glyphicon-plus" data-name="option"></span>
-				<div class="questiontype-type"> 
+				<span class="add-questiontype glyphicon glyphicon-plus" data-name="questiontype"></span>
+				<div class="questiontype-type questiontype-sortable">
 					<%=ques.fields_for :questiontypes do |qtyp|%>
-						<div>
+						<div class="hiddenquestiontype">
+							<div class="destroy-questiontype" style="display: none;">
+								<%=qtyp.check_box :_destroy%>
+							</div>
 							<%=qtyp.text_field :qtype%>
+							<span class="remove-questiontype glyphicon glyphicon-remove-sign" data-name="questiontype"></span>
 						</div>
 					<% end %>
 				</div>
@@ -41,6 +125,6 @@
 		<% end %>
 		</div>
 	<!-- </div> -->
-	
+
 	<%=f.submit "Update" %>
 <% end %>

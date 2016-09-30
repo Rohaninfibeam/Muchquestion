@@ -1,5 +1,5 @@
 class TestsController < ApplicationController
-	
+
 	def index
 		@test=Test.all
 	end
@@ -13,7 +13,7 @@ class TestsController < ApplicationController
 		@questype=Questiontype.all
 		render "somethingnew"
 	end
-	
+
 	def create
 		@test=Test.new(test_params)
 		# raise test_params.inspect
@@ -38,7 +38,7 @@ class TestsController < ApplicationController
 
 	def start_test
 		test_id=params[:id]
-		if session[:started_test]==nil 
+		if session[:started_test]==nil
 			session[:started_test]=test_id
 		else
 			raise "test already started".inspect
@@ -122,6 +122,6 @@ class TestsController < ApplicationController
   		elsif params.has_key? :competition
   			params[:test] = params.delete :competition
   		end
-		params.require(:test).permit(:name,:examtime,:type,question_ids:[],questions_attributes:[:id,:name,:question,questiontype_ids:[],questiontypes_attributes:[:id,:qtype],option_ids:[],options_attributes:[:id,:value,:istrue]])
+		params.require(:test).permit(:name,:examtime,:type,question_ids:[],questions_attributes:[:id,:_destroy,:name,:question,questiontype_ids:[],questiontypes_attributes:[:id,:_destroy, :qtype],option_ids:[],options_attributes:[:id, :_destroy, :value,:istrue]])
 	end
 end

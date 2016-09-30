@@ -4,7 +4,7 @@
 		$(".question-sortable,.option-sortable,.questiontype-sortable").sortable();
 		$(".remove-option,.remove-questiontype,.remove-question").click(remove_div);
 
-		function init_element(){	
+		function init_element(){
 			button= $(this).data("name");
 			console.log(button);
 			length=$(this).parent().find(".".concat(button,"-type")).children('div').length
@@ -36,12 +36,14 @@
 			button=$(this).data("name");
 			gp=$(this).parent().parent();
 			if(gp.children('div').length>1){
-				index=$(this).parent().index();
-				$(this).parent().nextAll().each(function(){
+				namestring=$(this).parent().find(":input").first()[0].name
+				index=parseInt(namestring.substring(namestring.indexOf(button)).match(/[0-9]+/)[0])
+				$(this).parent().parent().children("div").each(function(){
 					$(this).find(":input").each(function(){
-						this.name=this.name.replace(this.name.substr(this.name.indexOf(button)),this.name.substr(this.name.indexOf(button)).replace(/[0-9]+/,index))
-					});
-					index=index+1
+						ind=parseInt(this.name.substring(this.name.indexOf(button)).match(/[0-9]+/)[0])
+						if(ind>index)
+							this.name=this.name.replace(this.name.substr(this.name.indexOf(button)),this.name.substr(this.name.indexOf(button)).replace(/[0-9]+/,ind-1))
+					})
 				});
 				$(this).parent().remove();
 			}
@@ -49,7 +51,7 @@
 			{
 				$(this).parent().hide();
 				$(this).parent().find(":input").prop('disabled',true);
-			}				
+			}
 		}
 	});
 </script>
@@ -62,7 +64,7 @@
 	<label>Question</label>
 	<%=f.text_area :question, class: "form-control", rows: "5"%>
 </div>
-	
+
 <span class="add-option glyphicon glyphicon-plus" data-name="option">Add options</span>
 <div class="option-type option-sortable">
 	<%=f.fields_for :options do |opti|%>
