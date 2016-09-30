@@ -1,16 +1,25 @@
 <script type="text/javascript">
 	$(document).ready(function(){
-		$("#add-question,#add-option,#add-questiontype").unbind('click').click(function(){
-		console.log("hey bob");
-		button=this.id.split("-")[1]
-		length=$("#".concat(button,"-type")).children('div').length
-		clonedtype=$(this).parent().find("#".concat(button,"-type")).children().last().clone(true);
-		$(this).parent().find("#".concat(button,"-type")).append(clonedtype)
-		$(this).parent().find("#".concat(button,"-type")).children().last().find(":input").each(function(){
-			this.name=this.name.replace(this.name.substr(this.name.indexOf(button)),this.name.substr(this.name.indexOf(button)).replace(/[0-9]+/,length))
-		});
-		});
+		$(".add-question,.add-option,.add-questiontype").unbind('click').click(initfunction);
+		$(".question-sortable,.option-sortable,.questiontype-sortable").sortable();
+		function initfunction(){
+			console.log("hey bob");
+			button=$(this).data("name");
+			length=$("#".concat(button,"-type")).children('div').length
+			clonedtype=$(this).parent().find("#".concat(button,"-type")).children().last().clone();
+			$(this).parent().find("#".concat(button,"-type")).append(clonedtype)
+			$(this).parent().find("#".concat(button,"-type")).children().last().find(":input").each(function(){
+				this.name=this.name.replace(this.name.substr(this.name.indexOf(button)),this.name.substr(this.name.indexOf(button)).replace(/[0-9]+/,length))
+			});
+
+		}
 	});
+
+	// $(function(){
+	// 	$( ".question-sortable,.option-sortable,.questiontype-sortable").sortable({
+ //      		revert: true
+ //    	});
+	// });
 </script>
 <br>
 <div class="form-group">
@@ -23,7 +32,7 @@
 </div>
 	
 <span class="glyphicon glyphicon-plus" id="add-option"></span>
-<div id="option-type">
+<div id="option-type" class="option-sortable">
 	<%=f.fields_for :options do |opti|%>
 		<div>
 			options <%=opti.check_box :istrue%>
@@ -33,31 +42,13 @@
 	<% end %>
 </div>
 <br>
-
-
-	
-	<!-- <div>
-		<%=f.fields_for :options do |opti|%>
-			<%=opti.check_box :istrue%>
-			<%=opti.text_field :value%>
-		<% end %>
-	</div>
-	<div>
-		<%=f.fields_for :options do |opti|%>
-			<%=opti.check_box :istrue%>
-			<%=opti.text_field :value%>
-		<% end %>
-	</div>-->
-	
-	
-<!-- </div> -->
 <div>
 	Question Type <%=f.collection_select :questiontype_ids, Questiontype.all, :id, :qtype,{},{:multiple => true} %>
 </div>
 <br>
 
 <span class="glyphicon glyphicon-plus" id="add-questiontype"></span>
-<div id="questiontype-type">
+<div id="questiontype-type" class="questiontype-sortable">
 	<%=f.fields_for :questiontypes do |qtyp|%>
 		<div>
 			Add Question type <%=qtyp.text_field :qtype%>
