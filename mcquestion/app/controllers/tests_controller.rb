@@ -1,5 +1,5 @@
 class TestsController < ApplicationController
-	
+
 	def index
 		@test=Test.all
 	end
@@ -13,13 +13,62 @@ class TestsController < ApplicationController
 		@questype=Questiontype.all
 		render "somethingnew"
 	end
-	
+
 	def create
-		@test=Test.create(test_params)
+		@test=Test.new(test_params)
+		# raise test_params.inspect
+		if !@test.save
+			render "somethingnew"
+		end
+	end
+
+	def edit
+		@test=Test.find(params[:id])
+
+	end
+
+	def update
+		@test=Test.find(params[:id])
+		questionorder=1
+		test_params_new = Marshal.load(Marshal.dump(test_params))
+		test_params_new["questions_attributes"].each do |key,val|
+			if(val["_destroy"]=="0")
+				val.merge!("order"=> questionorder)
+				# raise val.inspect
+				questionorder=questionorder+1
+				optionorder=1
+				questiontypeorder=1
+				val["options_attributes"].each do |k,v|
+					if(v["_destroy"]=="0")
+						v.merge!("order"=>optionorder)
+						optionorder=optionorder+1
+					end
+				end
+				val["questiontypes_attributes"].each do |k,v|
+					if(v["_destroy"]=="0")
+						v.merge!("order"=>questiontypeorder)
+						questiontypeorder=questiontypeorder+1
+					end
+				end
+			end
+		end
+
+		# raise test_params_new.inspect
+
+		if @test.update_attributes!(test_params_new)
+			flash[:success]="Test updated successfully"
+		else
+			puts "not updated successfully"
+		end
 	end
 
 	def start_test
 		test_id=params[:id]
+		if session[:started_test]==nil
+			session[:started_test]=test_id
+		else
+			raise "test already started".inspect
+		end
 		@test=Test.find(test_id)
 		@testtime=@test.examtime.strftime("%H:%M:%S")
 		user_id=current_user.id
@@ -32,6 +81,7 @@ class TestsController < ApplicationController
 			else
 				raise "You are not added to test"
 			end
+
 		end
 
 		if(@testuser.usertests.empty?)
@@ -85,6 +135,11 @@ class TestsController < ApplicationController
 	private
 
 	def test_params
-		params.require(:test).permit(:name,:examtime,:type,question_ids:[],questions_attributes:[:name,:question,questiontype_ids:[],questiontypes_attributes:[:qtype],options_attributes:[:value,:istrue]])
+		if params.has_key? :practicetest
+    		params[:test] = params.delete :practicetest
+  		elsif params.has_key? :competition
+  			params[:test] = params.delete :competition
+  		end
+		params.require(:test).permit(:name,:examtime,:type,question_ids:[],questions_attributes:[:id,:_destroy,:name,:question,questiontype_ids:[],questiontypes_attributes:[:id,:_destroy, :qtype],option_ids:[],options_attributes:[:id, :_destroy, :value,:istrue]])
 	end
 end

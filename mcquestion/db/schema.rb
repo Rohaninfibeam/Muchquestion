@@ -12,6 +12,7 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema.define(version: 20160917170352) do
+# ActiveRecord::Schema.define(version: 20160915064758) do
 
   create_table "answerusers", force: :cascade do |t|
     t.integer  "userquestion_id", limit: 4
@@ -70,6 +71,7 @@ ActiveRecord::Schema.define(version: 20160917170352) do
     t.datetime "updated_at",                null: false
     t.integer  "realtestuser_id", limit: 4
     t.datetime "starttime"
+    # t.datetime "startedtime"
   end
 
   create_table "userquestions", force: :cascade do |t|

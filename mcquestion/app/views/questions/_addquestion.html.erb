@@ -1,17 +1,57 @@
 <script type="text/javascript">
 	$(document).ready(function(){
-		$(".add-question,.add-option,.add-questiontype").unbind('click').click(initfunction);
+		$(".add-question,.add-option,.add-questiontype").unbind('click').click(init_element);
 		$(".question-sortable,.option-sortable,.questiontype-sortable").sortable();
-		function initfunction(){
-			console.log("hey bob");
-			button=$(this).data("name");
-			length=$("#".concat(button,"-type")).children('div').length
-			clonedtype=$(this).parent().find("#".concat(button,"-type")).children().last().clone();
-			$(this).parent().find("#".concat(button,"-type")).append(clonedtype)
-			$(this).parent().find("#".concat(button,"-type")).children().last().find(":input").each(function(){
-				this.name=this.name.replace(this.name.substr(this.name.indexOf(button)),this.name.substr(this.name.indexOf(button)).replace(/[0-9]+/,length))
-			});
+		$(".remove-option,.remove-questiontype,.remove-question").click(remove_div);
 
+		function init_element(){
+			button= $(this).data("name");
+			console.log(button);
+			length=$(this).parent().find(".".concat(button,"-type")).children('div').length
+			if(!$(this).parent().find(".".concat(button,"-type")).children('div').is(":visible")){
+				$(this).parent().find(".hidden"+button).show();
+				$(this).parent().find(".".concat(button,"-type")).children('div').first().find(":input").prop('disabled', false)
+			}
+			else{
+				clonedtype=$(this).parent().find(".".concat(button,"-type")).children().last().clone();
+				$(this).parent().find(".".concat(button,"-type")).append(clonedtype)
+				$(this).parent().find(".".concat(button,"-type")).children().last().find(":input").each(function(){
+					this.name=this.name.replace(this.name.substr(this.name.indexOf(button)),this.name.substr(this.name.indexOf(button)).replace(/[0-9]+/,length))
+				});
+				if(button == "question"){
+					$('.add-option,.add-questiontype', clonedtype).click(init_element);
+					$('.option-sortable,.questiontype-sortable', clonedtype).sortable();
+					$(".remove-option,.remove-questiontype,.remove-question").click(remove_div);
+				}
+				if(button == "option"){
+					$(".remove-option",clonedtype).click(remove_div);
+				}
+				if(button == "questiontype"){
+					$(".remove-questiontype",clonedtype).click(remove_div);
+				}
+			}
+		}
+
+		function remove_div(){
+			button=$(this).data("name");
+			gp=$(this).parent().parent();
+			if(gp.children('div').length>1){
+				namestring=$(this).parent().find(":input").first()[0].name
+				index=parseInt(namestring.substring(namestring.indexOf(button)).match(/[0-9]+/)[0])
+				$(this).parent().parent().children("div").each(function(){
+					$(this).find(":input").each(function(){
+						ind=parseInt(this.name.substring(this.name.indexOf(button)).match(/[0-9]+/)[0])
+						if(ind>index)
+							this.name=this.name.replace(this.name.substr(this.name.indexOf(button)),this.name.substr(this.name.indexOf(button)).replace(/[0-9]+/,ind-1))
+					})
+				});
+				$(this).parent().remove();
+			}
+			else
+			{
+				$(this).parent().hide();
+				$(this).parent().find(":input").prop('disabled',true);
+			}
 		}
 	});
 
@@ -30,14 +70,14 @@
 	<label>Question</label>
 	<%=f.text_area :question, class: "form-control", rows: "5"%>
 </div>
-	
-<span class="glyphicon glyphicon-plus" id="add-option"></span>
-<div id="option-type" class="option-sortable">
+
+<span class="add-option glyphicon glyphicon-plus" data-name="option">Add options</span>
+<div class="option-type option-sortable">
 	<%=f.fields_for :options do |opti|%>
-		<div>
+		<div class="hiddenoption">
 			options <%=opti.check_box :istrue%>
 			<%=opti.text_field :value%>
-			<span class="glyphicon glyphicon-remove-sign"></span>
+			<span class="remove-option glyphicon glyphicon-remove-sign" data-name="option"></span>
 		</div>
 	<% end %>
 </div>
@@ -47,12 +87,12 @@
 </div>
 <br>
 
-<span class="glyphicon glyphicon-plus" id="add-questiontype"></span>
-<div id="questiontype-type" class="questiontype-sortable">
+<span class="add-questiontype glyphicon glyphicon-plus" data-name="questiontype">Add questiontype</span>
+<div class="questiontype-type questiontype-sortable">
 	<%=f.fields_for :questiontypes do |qtyp|%>
-		<div>
-			Add Question type <%=qtyp.text_field :qtype%>
-			<span class="glyphicon glyphicon-remove-sign"></span>
+		<div class="hiddenquestiontype" style="display: none;">
+			Add Question type <%=qtyp.text_field :qtype, disabled:"#{'disabled'}"%>
+			<span class="remove-questiontype glyphicon glyphicon-remove-sign" data-name="questiontype"></span>
 		</div>
 	<% end %>
 </div>
