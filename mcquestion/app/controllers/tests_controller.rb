@@ -6,15 +6,18 @@ class TestsController < ApplicationController
 
 	def new
 		@test=Test.new
-		@ques=@test.questions.new
-		@ques.questiontypes.new
+		@que=@test.testquestions.new
+		@ques=@que.build_question
 		@ques.options.new
+		@ques.questiontypes.new
 		@questions=Question.all
 		@questype=Questiontype.all
 		render "somethingnew"
 	end
 
 	def create
+
+		# raise test_params_new.inspect
 		@test=Test.new(test_params)
 		# raise test_params.inspect
 		if !@test.save
@@ -29,33 +32,26 @@ class TestsController < ApplicationController
 
 	def update
 		@test=Test.find(params[:id])
-		questionorder=1
-		test_params_new = Marshal.load(Marshal.dump(test_params))
-		test_params_new["questions_attributes"].each do |key,val|
-			if(val["_destroy"]=="0")
-				val.merge!("order"=> questionorder)
-				# raise val.inspect
-				questionorder=questionorder+1
-				optionorder=1
-				questiontypeorder=1
-				val["options_attributes"].each do |k,v|
-					if(v["_destroy"]=="0")
-						v.merge!("order"=>optionorder)
-						optionorder=optionorder+1
-					end
-				end
-				val["questiontypes_attributes"].each do |k,v|
-					if(v["_destroy"]=="0")
-						v.merge!("order"=>questiontypeorder)
-						questiontypeorder=questiontypeorder+1
-					end
-				end
-			end
-		end
+		# questionorder=1
+		# test_params_new = Marshal.load(Marshal.dump(test_params))
+		# test_params_new["testquestions_attributes"].each do |key,val|
+		# 	if(val["_destroy"]=="0")
+		# 		val.merge!("order"=> questionorder)
+		# 		# raise val.inspect
+		# 		questionorder=questionorder+1
+		# 	end
+		# 	optionorder=1
+		# 	val["question_attributes"]["options_attributes"].each do |k,v|
+		# 			if(v["_destroy"]=="0")
+		# 				v.merge!("order"=>optionorder)
+		# 				optionorder=optionorder+1
+		# 			end
+		# 	end
+		# end
 
 		# raise test_params_new.inspect
 
-		if @test.update_attributes!(test_params_new)
+		if @test.update_attributes!(test_params)
 			flash[:success]="Test updated successfully"
 		else
 			puts "not updated successfully"
@@ -148,6 +144,6 @@ class TestsController < ApplicationController
   		elsif params.has_key? :competition
   			params[:test] = params.delete :competition
   		end
-		params.require(:test).permit(:name,:examtime,:type,question_ids:[],questions_attributes:[:id,:_destroy,:name,:question,questiontype_ids:[],questiontypes_attributes:[:id,:_destroy, :qtype],option_ids:[],options_attributes:[:id, :_destroy, :value,:istrue]])
+		params.require(:test).permit(:name,:examtime,:type,question_ids:[],testquestions_attributes:[:id,:_destroy,:order,question_attributes:[:id,:name,:question,questiontype_ids:[],questiontypes_attributes:[:id,:_destroy, :qtype],option_ids:[],options_attributes:[:id, :_destroy,:order, :value,:istrue]]])
 	end
 end

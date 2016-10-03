@@ -1,6 +1,7 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		$(".add-question,.add-option,.add-questiontype").unbind('click').click(init_element);
+		$(".submit-form").submit(ordering);
 		$(".question-sortable,.option-sortable,.questiontype-sortable").sortable();
 		$(".remove-option,.remove-questiontype,.remove-question").click(remove_div);
 
@@ -53,6 +54,15 @@
 				$(this).parent().find(":input").prop('disabled',true);
 			}
 		}
+
+		function ordering(){
+			$(".question-type").children('div').each(function(index){
+				$(this).children(".order-question").find(":input").first().val(index+1)
+				$(this).children(".option-type").children('div').each(function(ind){
+					$(this).children(".order-option").find(":input").first().val(ind+1)
+				});
+			});
+		}
 	});
 </script>
 <br>
@@ -69,6 +79,9 @@
 <div class="option-type option-sortable">
 	<%=f.fields_for :options do |opti|%>
 		<div class="hiddenoption">
+			<div class="order-option" style="display: none;">
+				<%=opti.text_field :order%>
+			</div>
 			options <%=opti.check_box :istrue%>
 			<%=opti.text_field :value%>
 			<span class="remove-option glyphicon glyphicon-remove-sign" data-name="option"></span>

@@ -1,4 +1,4 @@
-<%=form_for(@test,as: :test, url:{action:"create"}, :html=>{:class=>"container panel panel-default"}) do |f| %>
+<%=form_for(@test,as: :test, url:{action:"create"}, :html=>{:class=>"submit-form container panel panel-default"}) do |f| %>
 	<div class=" panel-heading">
 		<div>
 			<% if @test.errors.any?%>
@@ -21,11 +21,16 @@
 	<span class="add-question glyphicon glyphicon-plus" data-name="question">Add questions</span>
 	<br>
 	<div class="question-type question-sortable">
-		<%=f.fields_for :questions do |ques|%>
-			<div class="hiddenquestion panel panel-body panel-success">
-				<span class="remove-question glyphicon glyphicon-remove-sign" data-name="question" style="float:right"></span>
-				<%=render partial: "questions/addquestion", locals:{f:ques}%>
-			</div>
+		<%=f.fields_for :testquestions do |que|%>
+			<%=que.fields_for :question do |ques|%>
+				<div class="hiddenquestion panel panel-body panel-success">
+					<div class="order-question" style="display: none;">
+						<%=que.text_field :order%>
+					</div>
+					<span class="remove-question glyphicon glyphicon-remove-sign" data-name="question" style="float:right"></span>
+					<%=render partial: "questions/addquestion", locals:{f:ques}%>
+				</div>
+		  <% end %>
 		<% end %>
 	</div>
 	<div class="panel-footer panel-success">
