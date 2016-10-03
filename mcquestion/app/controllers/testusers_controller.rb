@@ -6,6 +6,11 @@ class TestusersController < ApplicationController
 		@testuser=Testuser.create(testuser_params)
 	end
 
+	def update
+		@testuser=Testuser.find(params[:id])
+		@testuser=@testuser.update(testuser_params)
+	end
+	
 	private
 
 	def testuser_params

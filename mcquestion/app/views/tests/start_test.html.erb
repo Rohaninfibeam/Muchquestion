@@ -53,7 +53,7 @@
 
   <div class="row container">
     <div class="col-md-9">
-      <%= form_for @testuser, url: {controller:"testusers",action: "createuseranswer"}, method: "put"  do |f|%>
+      <%= form_for @testuser, method: "patch"  do |f|%>
         <%= f.hidden_field :test_id%>
         <%= f.hidden_field :user_id%>
         <%= f.hidden_field :realtestuser_id%>

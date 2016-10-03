@@ -64,6 +64,12 @@
 			});
 		}
 	});
+
+	// $(function(){
+	// 	$( ".question-sortable,.option-sortable,.questiontype-sortable").sortable({
+ //      		revert: true
+ //    	});
+	// });
 </script>
 <br>
 <div class="form-group">
@@ -89,7 +95,6 @@
 	<% end %>
 </div>
 <br>
-
 <div>
 	Question Type <%=f.collection_select :questiontype_ids, Questiontype.all, :id, :qtype,{},{:multiple => true} %>
 </div>

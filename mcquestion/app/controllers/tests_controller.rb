@@ -75,26 +75,34 @@ class TestsController < ApplicationController
 				@test.users<<User.find(user_id)
 				@testuser=Testuser.where(user_id:user_id,test_id:@test.id,realtestuser_id:nil).first
 			else
-				raise "You are not added to the Test".inspect
+				raise "You are not added to test"
 			end
+
 		end
 
-		if !@testuser.usertests.nil?
-			st=@testuser.usertests.last.startedtime
-			et=@test.examtime
-			if(DateTime.new(st.year,st.month,st.day,(st.hour+et.hour),(st.min+et.min),(st.sec+et.sec))>Time.now)
+		if(@testuser.usertests.empty?)
+			@testuser=@testuser.usertests.new(user_id:user_id,test_id:@test.id,starttime:Time.now)
+			@testuser.save
+		else
+			@lust=@testuser.usertests.last.starttime
+			@tm=@test.examtime
+			@totdate=DateTime.new(@lust.year,@lust.month,@lust.day,(@lust.hour+@tm.hour),(@lust.min+@tm.min),(@lust.sec+@tm.sec),@lust.zone)
+			# raise @totdate.inspect
+
+			if(@totdate<=Time.current)
 				if(@test.type="Practicetest")
-					@testuser=Testuser.new(:test_id=>test_id,:user_id=>user_id,:realtestuser_id=>@testuser.id)
+					@testuser=@testuser.usertests.new(user_id:user_id,test_id:@test.id,starttime:Time.now)
+					@testuser.save
 				else
-					raise "you have already submitted the test "
+					raise "You have already submitted the answer"
 				end
+				# raise "safddaefwev".inspect
 			else
-
-
+				@testuser=@testuser.usertests.last
+				total_seconds=@totdate.to_time-Time.current.to_time
+				   # raise total_seconds.inspect
+				@testtime=Time.at(total_seconds).utc.strftime("%H:%M:%S")
 			end
-			@testuser=Testuser.new(:test_id=>test_id,:user_id=>user_id,:realtestuser_id=>@testuser.id)
-			@userques=@testuser.userquestions.build
-			@userques.answerusers.build
 		end
 
 
@@ -102,36 +110,20 @@ class TestsController < ApplicationController
 
 
 
+		# if ((@test.type=="Practicetest")&&(@testuser.nil?))
+		# 	@test.users<<User.find(user_id)
+		# 	@testuser=Testuser.where(user_id:user_id,test_id:@test.id,realtestuser_id:nil).first
+		# end
 
+		# if ((@test.type=="Competition")&&(@testuser.nil?))
+		# 	raise "You are not added to the Test".inspect
+		# end
 
+		# if((@testuser.usertests.count>0)&&(@test.type=="Competition"))
+		# 	raise "You have already submitted the answer for this test".inspect
+		# end
 
-
-
-
-
-
-
-
-
-
-
-
-		if ((@test.type=="Practicetest")&&(@testuser.nil?))
-			@test.users<<User.find(user_id)
-			@testuser=Testuser.where(user_id:user_id,test_id:@test.id,realtestuser_id:nil).first
-		end
-
-		if ((@test.type=="Competition")&&(@testuser.nil?))
-			raise "You are not added to the Test".inspect
-		end
-
-		# if(@testuser.usertests.count==0)
-
-		if((@testuser.usertests.count>0)&&(@test.type=="Competition"))
-			raise "You have already submitted the answer for this test".inspect
-		end
-
-		@testuser=Testuser.new(:test_id=>test_id,:user_id=>user_id,:realtestuser_id=>@testuser.id)
+		# @testuser=Testuser.new(:test_id=>test_id,:user_id=>user_id,:realtestuser_id=>@testuser.id)
 		@userques=@testuser.userquestions.build
 		@userques.answerusers.build
 	end
