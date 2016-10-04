@@ -28,11 +28,11 @@
       {
         tottime=valueTimer -1;
         hours = (valueTimer/3600).toString().split('.')[0];
-        mins  = ((valueTimer % 3600) / 60).toString().split('.')[0]; 
-        secs  = ((valueTimer % 3600) % 60).toString(); 
-       
-        if(hours.length == 1) hours = '0' + hours; 
-        if(mins.length  == 1) mins  = '0' + mins; 
+        mins  = ((valueTimer % 3600) / 60).toString().split('.')[0];
+        secs  = ((valueTimer % 3600) % 60).toString();
+
+        if(hours.length == 1) hours = '0' + hours;
+        if(mins.length  == 1) mins  = '0' + mins;
         if(secs.length  == 1) secs  = '0' + secs;
 
         $('#timer').text( hours + ':' +  mins + ':'  + secs);
@@ -57,8 +57,9 @@
         <%= f.hidden_field :test_id%>
         <%= f.hidden_field :user_id%>
         <%= f.hidden_field :realtestuser_id%>
-        <% @test.questions.each_with_index do |ques,val|%>
+        <% @test.testquestions.each_with_index do |ques,val|%>
           <div>
+            <% ques=ques.question%>
             <div class="panel panel-default">
               <div class="panel-heading">
                 <%=val+1%>. <%= ques.question %>
@@ -86,7 +87,7 @@
     </div>
     <div class="col-md-3">
       <!-- <div id="simple_timer" class="syo_timer timer">
-      
+
       </div> -->
       <div>
         Time Left : <b id="timer"></b>

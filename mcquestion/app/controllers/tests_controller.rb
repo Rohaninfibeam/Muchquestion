@@ -30,6 +30,7 @@ class TestsController < ApplicationController
 
 	end
 
+
 	def update
 		@test=Test.find(params[:id])
 		# questionorder=1
@@ -60,11 +61,11 @@ class TestsController < ApplicationController
 
 	def start_test
 		test_id=params[:id]
-		if session[:started_test]==nil
-			session[:started_test]=test_id
-		else
-			raise "test already started".inspect
-		end
+		# if session[:started_test]==nil
+		# 	session[:started_test]=test_id
+		# else
+		# 	raise "test already started".inspect
+		# end
 		@test=Test.find(test_id)
 		@testtime=@test.examtime.strftime("%H:%M:%S")
 		user_id=current_user.id
