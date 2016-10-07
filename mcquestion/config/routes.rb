@@ -22,6 +22,11 @@ Rails.application.routes.draw do
       member do
         get 'start_test'
       end
+      collection do
+        get 'testupload'
+        post 'uploadfile'
+      end
+
     end
 
     put 'tests/:id/start_test', to: 'testusers#createuseranswer'

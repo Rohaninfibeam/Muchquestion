@@ -30,6 +30,23 @@ class TestsController < ApplicationController
 
 	end
 
+  def testupload
+		@testfile=TestUpload.new
+	end
+
+	def uploadfile
+		file=params[:filename]
+		name=file.original_filename
+		current_time=Time.now.strftime("%d_%m_%Y_%H_%M_%S")
+		newname=name+current_time
+	  root_path=FileUtils.pwd
+		path=File.join(root_path,"file_upload")
+		FileUtils.mkdir_p(path) if(!File.directory?(path))
+		filename=File.join(path,newname)
+		File.open(filename, "wb"){|f| f.write(file.read)}
+		@testupload=TestUpload.new(:filename=>filename,:path=>path,:fname=>newname,:external_file_name=>name)
+		@testupload.save
+	end
 
 	def update
 		@test=Test.find(params[:id])

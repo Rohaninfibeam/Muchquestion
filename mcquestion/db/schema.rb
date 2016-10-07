@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160915064758) do
+ActiveRecord::Schema.define(version: 20161006071459) do
 
   create_table "answerusers", force: :cascade do |t|
     t.integer  "userquestion_id", limit: 4
@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(version: 20160915064758) do
     t.boolean  "istrue",      limit: 1
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
+    t.integer  "order",       limit: 4
   end
 
   create_table "questions", force: :cascade do |t|
@@ -48,11 +49,21 @@ ActiveRecord::Schema.define(version: 20160915064758) do
     t.datetime "updated_at",             null: false
   end
 
+  create_table "test_uploads", force: :cascade do |t|
+    t.string   "filename",           limit: 255
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.string   "path",               limit: 255
+    t.string   "external_file_name", limit: 255
+    t.string   "fname",              limit: 255
+  end
+
   create_table "testquestions", force: :cascade do |t|
     t.integer  "test_id",     limit: 4
     t.integer  "question_id", limit: 4
     t.datetime "created_at",            null: false
     t.datetime "updated_at",            null: false
+    t.integer  "order",       limit: 4
   end
 
   create_table "tests", force: :cascade do |t|
@@ -70,6 +81,7 @@ ActiveRecord::Schema.define(version: 20160915064758) do
     t.datetime "updated_at",                null: false
     t.integer  "realtestuser_id", limit: 4
     t.datetime "startedtime"
+    t.datetime "starttime"
   end
 
   create_table "userquestions", force: :cascade do |t|
