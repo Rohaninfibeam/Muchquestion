@@ -17,9 +17,10 @@ class TestsController < ApplicationController
 
 	def create
 
-		# raise test_params_new.inspect
+		raise test_params.inspect
 		@test=Test.new(test_params)
 		# raise test_params.inspect
+		raise @test.inspect
 		if !@test.save
 			render "somethingnew"
 		end
@@ -78,11 +79,6 @@ class TestsController < ApplicationController
 
 	def start_test
 		test_id=params[:id]
-		# if session[:started_test]==nil
-		# 	session[:started_test]=test_id
-		# else
-		# 	raise "test already started".inspect
-		# end
 		@test=Test.find(test_id)
 		@testtime=@test.examtime.strftime("%H:%M:%S")
 		user_id=current_user.id
@@ -95,7 +91,6 @@ class TestsController < ApplicationController
 			else
 				raise "You are not added to test"
 			end
-
 		end
 
 		if(@testuser.usertests.empty?)
@@ -115,6 +110,8 @@ class TestsController < ApplicationController
 					raise "You have already submitted the answer"
 				end
 				# raise "safddaefwev".inspect
+			elsif @testuser.usertests.last.submitted && @test.type=="Competition"
+				raise "You have submitted"
 			else
 				@testuser=@testuser.usertests.last
 				total_seconds=@totdate.to_time-Time.current.to_time
@@ -142,8 +139,15 @@ class TestsController < ApplicationController
 		# end
 
 		# @testuser=Testuser.new(:test_id=>test_id,:user_id=>user_id,:realtestuser_id=>@testuser.id)
-		@userques=@testuser.userquestions.build
-		@userques.answerusers.build
+		if(!@testuser.userquestions.exists?)
+			@test.questions.each do |que|
+				@userque=Userquestion.create(question_id:que.id)
+				@testuser.userquestions<<@userque
+				que.options.each do |opt|
+					@userque.answerusers<<Answeruser.create(option_name:opt.id)
+				end
+			end
+		end
 	end
 
 	private

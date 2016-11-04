@@ -20,7 +20,7 @@ Rails.application.routes.draw do
     resources :testusers
     resources :tests do
       member do
-        get 'start_test'
+         get 'start_test'
       end
       collection do
         get 'testupload'

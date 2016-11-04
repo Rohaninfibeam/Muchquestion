@@ -1,4 +1,5 @@
 class Userquestion < ActiveRecord::Base
+	before_destroy :destroy_answeusers
 	belongs_to :testuser, ->{where realtestuser_id: nil}
 	has_many :answerusers
 	accepts_nested_attributes_for :answerusers
@@ -10,4 +11,10 @@ class Userquestion < ActiveRecord::Base
 	# 		raise "Error as #{self} already exists".inspect
 	# 	end
 	# end
+
+	private
+
+	def destroy_answeusers
+		self.answerusers.destroy_all
+	end
 end

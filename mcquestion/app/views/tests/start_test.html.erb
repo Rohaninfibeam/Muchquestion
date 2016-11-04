@@ -21,7 +21,14 @@
         var [h,m,s]=strtime.split(":").map(Number)
         $("#timvalue").val(h*3600 + m*60 +s);
         timerHandler = setInterval( "MyTimer()" , 1000);
+        timerHandler = setInterval( "MyTimerForUpdate()" , 60000);
     });
+
+    function MyTimerForUpdate(){
+      var num=<%=@testuser.id%>;
+      var data=$('form').serialize();
+      $.post('/testusers/'+num.toString(),data);
+    };
 
     function MyTimer(){
       valueTimer=$("#timvalue").val();
@@ -55,31 +62,44 @@
   <div class="row container">
     <div class="col-md-9">
       <%= form_for @testuser, method: "patch"  do |f|%>
-        <%= f.hidden_field :test_id%>
-        <%= f.hidden_field :user_id%>
-        <%= f.hidden_field :realtestuser_id%>
-        <% @test.testquestions.each_with_index do |ques,val|%>
-          <div>
-            <% ques=ques.question%>
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <%=val+1%>. <%= ques.question %>
-              </div>
-              <div class="panel-body">
-               <%=f.fields_for :userquestions do |userque|%>
-                <%=userque.hidden_field :question_id, :value => ques.id%>
-                <% ques.options.each do |opt|%>
-                    <div class="container">
-                       <%=userque.fields_for :answerusers do |ansuser|%>
-                         <%=ansuser.check_box :option_id, {}, opt.id%>
-                       <% end %>
-                       <%= opt.value %>
-                    </div>
-                <% end %>
-               <% end %>
+        <!-- <%= f.hidden_field :test_id%> -->
+        <% if @testuser.userquestions.exists?%>
+          <%=f.fields_for :userquestions do |userque|%>
+            <%=Question.find(userque.object.question_id).question%>
+            <%=userque.fields_for :answerusers do |ansuser|%>
+              <%=ansuser.check_box :option_id%>
+              <%=Option.find(ansuser.object.option_name).value%>
+            <% end %>
+          <% end %>
+        <% else%>
+          <% @test.testquestions.each_with_index do |ques,val|%>
+            <div>
+              <% if !ques.question.nil?
+                ques=ques.question
+              else
+                next
+              end %>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                   <%=val+1%>. <%=ques.question%>
+                </div>
+                <div class="panel-body">
+                 <%=f.fields_for :userquestions do |userque|%>
+                  <%=userque.hidden_field :question_id, :value => ques.id%>
+                  <% ques.options.each do |opt|%>
+                      <div class="container">
+                         <%=userque.fields_for :answerusers do |ansuser|%>
+                           <%=ansuser.check_box :option_id%>
+                           <%=ansuser.hidden_field :option_name, :value=>opt.id%>
+                         <% end %>
+                         <%= opt.value %>
+                      </div>
+                  <% end %>
+                 <% end %>
+                </div>
               </div>
             </div>
-          </div>
+          <% end %>
         <% end %>
         <div class="text-center">
           <%=f.submit "Submit"%>
