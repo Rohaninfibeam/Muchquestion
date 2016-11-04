@@ -1,0 +1,12 @@
+name,examtime,type,name,question,istrue,value,qtype
+test1,03:00:00,Competition,name,whats name?,1,rohan,qt11
+,,,,,0,roj,qt22
+,,,,,1,fef,qt33
+,,,,,,,qt44
+,,,roll,roll?,1,123,q1
+,,,,,0,234,q2
+,,,,,1,345,
+,,,,,0,33,
+,,,marks,marks?,1,12,qt1
+,,,,,0,13,qt22
+,,,,,0,100,qt33

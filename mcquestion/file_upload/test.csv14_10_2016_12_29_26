@@ -1,0 +1,12 @@
+Name,Time,Type,Qname,Question,Option-truth-value,Option-value,Question-type
+test1,03:00:00,Practice,newq,what is this,1,book,qt11
+,,,,,0,pen,qt22
+,,,,,1,pencil,qt33
+,,,,,,,qt44
+,,,ques2,why?,1,desktop,q1
+,,,,,0,mouse,q2
+,,,,,1,key,
+,,,,,0,all,
+,,,ques3,when?,1,abc,qt1
+,,,,,0,def,qt22
+,,,,,0,ghi,qt33
