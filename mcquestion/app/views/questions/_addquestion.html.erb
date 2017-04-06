@@ -1,84 +1,13 @@
-<script type="text/javascript">
-	$(document).ready(function(){
-		$(".add-question,.add-option,.add-questiontype").unbind('click').click(init_element);
-		$(".submit-form").submit(ordering);
-		$(".question-sortable,.option-sortable,.questiontype-sortable").sortable();
-		$(".remove-option,.remove-questiontype,.remove-question").click(remove_div);
-
-		function init_element(){
-			button= $(this).data("name");
-			console.log(button);
-			length=$(this).parent().find(".".concat(button,"-type")).children('div').length
-			if(!$(this).parent().find(".".concat(button,"-type")).children('div').is(":visible")){
-				$(this).parent().find(".hidden"+button).show();
-				$(this).parent().find(".".concat(button,"-type")).children('div').first().find(":input").prop('disabled', false)
-			}
-			else{
-				clonedtype=$(this).parent().find(".".concat(button,"-type")).children().last().clone();
-				$(this).parent().find(".".concat(button,"-type")).append(clonedtype)
-				$(this).parent().find(".".concat(button,"-type")).children().last().find(":input").each(function(){
-					this.name=this.name.replace(this.name.substr(this.name.indexOf(button)),this.name.substr(this.name.indexOf(button)).replace(/[0-9]+/,length))
-				});
-				if(button == "question"){
-					$('.add-option,.add-questiontype', clonedtype).click(init_element);
-					$('.option-sortable,.questiontype-sortable', clonedtype).sortable();
-					$(".remove-option,.remove-questiontype,.remove-question").click(remove_div);
-				}
-				if(button == "option"){
-					$(".remove-option",clonedtype).click(remove_div);
-				}
-				if(button == "questiontype"){
-					$(".remove-questiontype",clonedtype).click(remove_div);
-				}
-			}
-		}
-
-		function remove_div(){
-			button=$(this).data("name");
-			gp=$(this).parent().parent();
-			if(gp.children('div').length>1){
-				namestring=$(this).parent().find(":input").first()[0].name
-				index=parseInt(namestring.substring(namestring.indexOf(button)).match(/[0-9]+/)[0])
-				$(this).parent().parent().children("div").each(function(){
-					$(this).find(":input").each(function(){
-						ind=parseInt(this.name.substring(this.name.indexOf(button)).match(/[0-9]+/)[0])
-						if(ind>index)
-							this.name=this.name.replace(this.name.substr(this.name.indexOf(button)),this.name.substr(this.name.indexOf(button)).replace(/[0-9]+/,ind-1))
-					})
-				});
-				$(this).parent().remove();
-			}
-			else
-			{
-				$(this).parent().hide();
-				$(this).parent().find(":input").prop('disabled',true);
-			}
-		}
-
-		function ordering(){
-			$(".question-type").children('div').each(function(index){
-				$(this).children(".order-question").find(":input").first().val(index+1)
-				$(this).children(".option-type").children('div').each(function(ind){
-					$(this).children(".order-option").find(":input").first().val(ind+1)
-				});
-			});
-		}
-	});
-
-	// $(function(){
-	// 	$( ".question-sortable,.option-sortable,.questiontype-sortable").sortable({
- //      		revert: true
- //    	});
-	// });
-</script>
 <br>
 <div class="form-group">
 	<label>Question name</label>
 	<%=f.text_field :name, class: "form-control"%>
+	<%=f.error_message_for :name%>
 </div>
 <div class="form-group">
 	<label>Question</label>
 	<%=f.text_area :question, class: "form-control", rows: "5"%>
+	<%=f.error_message_for :question%>
 </div>
 
 <span class="add-option glyphicon glyphicon-plus" data-name="option">Add options</span>
@@ -90,6 +19,7 @@
 			</div>
 			options <%=opti.check_box :istrue%>
 			<%=opti.text_field :value%>
+			<%=opti.error_message_for :value%>
 			<span class="remove-option glyphicon glyphicon-remove-sign" data-name="option"></span>
 		</div>
 	<% end %>
@@ -105,6 +35,7 @@
 	<%=f.fields_for :questiontypes do |qtyp|%>
 		<div class="hiddenquestiontype" style="display: none;">
 			Add Question type <%=qtyp.text_field :qtype, disabled:"#{'disabled'}"%>
+			<%=qtyp.error_message_for :qtype%>
 			<span class="remove-questiontype glyphicon glyphicon-remove-sign" data-name="questiontype"></span>
 		</div>
 	<% end %>

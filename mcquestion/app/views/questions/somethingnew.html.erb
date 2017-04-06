@@ -1,9 +1,5 @@
 <%= form_for @ques, url:{action:"create"}, :html=>{:class=>"container panel panel-defualt"} do |f|%>
-	<div>
-		<% if @ques.errors.any?%>
-			<%= @ques.errors.full_messages %>
-		<% end %>
-	</div>
+	
 	<div class="question-type">
 		<div class="panel panel-body panel-success">
 			<%=render partial: "addquestion", locals:{f:f}%>

@@ -16,11 +16,7 @@ class TestsController < ApplicationController
 	end
 
 	def create
-
-		raise test_params.inspect
 		@test=Test.new(test_params)
-		# raise test_params.inspect
-		raise @test.inspect
 		if !@test.save
 			render "somethingnew"
 		end

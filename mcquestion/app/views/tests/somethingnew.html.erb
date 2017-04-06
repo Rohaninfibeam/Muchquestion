@@ -1,15 +1,12 @@
 <%=form_for(@test,as: :test, url:{action:"create"}, :html=>{:class=>"submit-form container panel panel-default"}) do |f| %>
 	<div class=" panel-heading">
 		<div>
-			<% if @test.errors.any?%>
-				<%= @test.errors.full_messages %>
-			<% end %>
-		</div>
-		<div>
 			Name of Test:<%=f.text_field :name%>
+			<%=f.error_message_for :name%>
 		</div>
 		<div>
 			Time: <%=f.time_field :examtime%>
+			<%=f.error_message_for :examtime%>
 		</div>
 		<div>
 			Type: <%=f.select(:type,options_for_select(["Practicetest","Competition"]))%>

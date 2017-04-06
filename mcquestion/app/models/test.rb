@@ -34,6 +34,11 @@ class Test < ActiveRecord::Base
 		end
 	end
 
+	def find_result(user_id)
+		tu=self.testusers.where("user_id"=>user_id).first
+		pp tu.usertests.map{|ut| {ut.id=>ut.userquestions.select{|uq| uq.answerusers.select{|au| au.option_id!=Option.find(au.option_name).istrue}.count==0}.count}}
+	end
+
 	private
 
 	def make_ordering
